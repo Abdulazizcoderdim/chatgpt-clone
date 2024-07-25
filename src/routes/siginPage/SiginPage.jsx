@@ -1,3 +1,4 @@
+import React from 'react'
 import './siginPage.css'
 
 const SiginPage = () => {
