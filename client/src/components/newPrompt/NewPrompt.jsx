@@ -1,23 +1,40 @@
-import React, { useEffect, useRef } from 'react'
+import { IKImage } from 'imagekitio-react'
+import { useEffect, useRef, useState } from 'react'
+import Upload from '../upload/Upload'
 import './newPrompt.css'
 
-const NewPrompt = () => {
+const NewPrompt = ({ data }) => {
+  const [img, setImg] = useState({
+    isLoading: false,
+    error: '',
+    dbData: {},
+  })
+
   const endRef = useRef(null)
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [])
+    endRef.current.scrollIntoView({ behavior: 'smooth' })
+  }, [data])
+
   return (
     <>
-      {/* add new chat */}
-      <div className="endChat" ref={endRef}>TEST</div>
+      {/* ADD NEW CHAT */}
+      {img.isLoading && <div className=''>Loading...</div>}      
+      {img.dbData?.filePath && (
+        <IKImage
+          urlEndpoint={import.meta.env.VITE_IMAGE_KIT_ENDPPOINT}
+          path={img.dbData?.filePath}
+          width="380"
+          transformation={[{ width: 380 }]}
+        />
+      )}
+      
+      <div className="endChat" ref={endRef}></div>
       <form className="newForm">
-        <label htmlFor="file">
-          <img src="/attachment.png" alt="" />
-        </label>
+        <Upload setImg={setImg} />
         <input id="file" type="file" multiple={false} hidden />
-        <input type="text" placeholder="Ask anything..." />
-        <button title="Send">
+        <input type="text" name="text" placeholder="Ask anything..." />
+        <button>
           <img src="/arrow.png" alt="" />
         </button>
       </form>
